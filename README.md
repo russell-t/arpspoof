@@ -1,5 +1,3 @@
-# On your "hacking" machine do the following:
-
 ### Install Scapy
 ```
 sudo apt-get install python3-scapy
@@ -29,8 +27,4 @@ sudo python3 arp-psn.py <victim ip> <gateway ip>
 sudo python3 httpspoof.py <victim ip> <word to replace> <replacement word>
 ```
 **Note:** the word to replace and replacement word must have the same number of characters
-  
-  
-# On the victim computer associated with "victim ip":
 
-Access a http website.
