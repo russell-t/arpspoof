@@ -3,9 +3,10 @@
 sudo apt-get install python3-scapy
 ```
 
-### Install iptables
+### Install iptables and follow this guide
+http://www.intellamech.com/RaspberryPi-projects/rpi_iptables.html
 ```
-sudo apt-get install
+sudo apt-get install iptables-persistent
 ```
 
 ### Install NetfilterQueue
