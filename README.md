@@ -1,7 +1,7 @@
 # arpspoof
 
-Install Scapy
-sudo apt-get install python3-scapy
+* Install Scapy
+'sudo apt-get install python3-scapy'
 
 Install iptables
 sudo apt-get install
