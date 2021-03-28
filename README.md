@@ -66,4 +66,4 @@ sudo python3 httpspoof.py <victim ip> <word to replace> <replacement word>
 **Note:** the word to replace and replacement word must have the same number of characters
 
 ## A word of caution
-I am not responsible for your use of this code. It is meant for solely for learning and exploring networking.  
+I am not responsible for your use of this code. It is meant solely for learning and exploring networking. Please use it on a private network and on machines that are yours.
