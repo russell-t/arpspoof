@@ -5,10 +5,16 @@ arp-psn.py
 This script was written to explore something called ARP spoofing. ARP spoofing, or ARP poisoning,
 is a (normally) malicious technique where an attacker sends false ARP messages
 on a local network to initiate a man in the middle (MITM) attack. It works like so:
-- The attacker sends an ARP reply to a victim machine saying "I am the router, and this is my MAC address" The MAC address is the MAC address of the attacker's computer.
-- The attacker sends an ARP reply to the network gateway saying "I am the victim machine, this is my MAC address". Again, the MAC address is the MAC address of the attacker's computer.
-- Now, the router associates the IP of the victim computer with the MAC address of the attacker, and the victim computer associates the IP address of the router with MAC address of the attacker. This allows the attacker to see all traffic between the victim and gateway.
-- Normally, the traffic would stop at the attacker's machine and stop there, but if IP forwarding is enabled, the traffic will be forwarded to its proper destination and everything will seem normal to the victim (unless they run arp -a in a terminal and see the MAC address of the router matches another device on the network)
+- The attacker sends an ARP reply packet to a victim machine saying "I am the router, and this is my MAC address" This updates the victim machine's ARP table, linking the IP of the network gateway with the MAC address of the attacker. 
+- The attacker sends an ARP reply packet to the network gateway saying "I am the victim machine, and this is my MAC address". This updates the network gateway's ARP table, linking the IP of the victim machine with the MAC address of the attacker.
+
+Address Resolution Protocol (ARP) is what resolves an IP to a MAC address. In other words, a machine looks up the MAC address it has associated with a given IP to know where to actually send the packet to, similar to how DNS resolve host names to IPs.
+
+Now,
+- All traffic sent from the victim computer that was destined for the network gateway will now land at the attacker machine.
+- Similarly, all traffic sent from the network gateway that was destined for the victim machine will now land at the attacker machine.
+
+IP forwarding is enabled on the attacker machine, which causes the packets sent from the victim (destined for the router) to be forwarded on to the router, and the packets from the router (destined for the victim) to be forwarded on to the victim. The victim is able to use the internet as usual, but all network packets being sent/received by them are accessible to the attacker to be viewed, saved, **modified**, etc. 
 
 These packets are sent every 10 seconds to maintain the MITM attack.
 
