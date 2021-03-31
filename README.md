@@ -45,11 +45,15 @@ sudo apt-get install python3-scapy
 ```
 
 ### Installing iptables
-I used this guide to set up a basic rule set for iptables:
-http://www.intellamech.com/RaspberryPi-projects/rpi_iptables.html
+I followed the "Firewall" section of this guide to set up iptables (I think):
+https://makezine.com/2017/09/07/secure-your-raspberry-pi-against-attackers/
 ```
-sudo apt-get install iptables-persistent
+sudo apt-get install iptables iptables-persistent
 ```
+
+Note that the rules are saved into /etc/iptables/rules.v4
+This is the file that is "restored" after the Python scripts are closed. If you save your rules into a different file than that, you will have to modify
+the scripts to restore from it (or just delete that line from the scripts and instead flush the rules that the scripts changed).
 
 ### Installing NetfilterQueue
 ```
