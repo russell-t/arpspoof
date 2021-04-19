@@ -77,7 +77,10 @@ def restore(res1,res2):
     os.system("sysctl -w net.ipv4.ip_forward=0 >/dev/null 2>&1")
     
     # restore iptables 
-    os.system("iptables-restore < /etc/iptables/rules.v4")
+    os.system("iptables -F")
+    os.system("iptables -X")
+    os.system("iptables -t nat -F")
+    os.system("iptables -t nat -X")
     
     # reARP
     print('\tRE-ARPing...')
